@@ -178,21 +178,29 @@ for i in Ordered_Cities:
 time_list.append(Ordered_Cities[0])
 times = []
 
-for i in range(NOC_test):
-    origin = time_list[i]
-    destination = time_list[i+1]
-    q = requests.get('''https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=%s&destinations=%s&key=AIzaSyBXreCjf8x8_L7-7CW7ymdsV7jLaxuXeRg''' % (origin, destination))
-    data3 = q.json()
-    time = data3['rows'][0]['elements'][0]['duration']['value']
-    times.append(time)
-round_trip_sec = sum(times)
-round_trip_hours = round_trip_sec/360
-round_trip_days = round_trip_hours/24
-
-print
 print "For the fastest route, visit the cities in this order:", Ordered_Cities
-print "If you are driving, it will take you approximately %s hours, or %s days, to complete your journey." % (round_trip_hours, round_trip_days)
 print "(Note: You can start at any city you like, and move right or left through the list and return back to the city you started at.)"
 
+America = raw_input('Would you like the driving time between the cities, if possible? Y/N    ')
+if America == 'Y':
+    for i in range(NOC_test):
+        origin = time_list[i]
+        destination = time_list[i+1]
+        q = requests.get('''https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=%s&destinations=%s&key=AIzaSyBXreCjf8x8_L7-7CW7ymdsV7jLaxuXeRg''' % (origin, destination))
+        data3 = q.json()
+        test = data3['rows'][0]['elements'][0]
+        if 'duration' in test.keys():
+            pass
+        else:
+            print "Sorry, it is not possible to drive to all the destinations you entered"
+            quit()
+        time = data3['rows'][0]['elements'][0]['duration']['value']
+        times.append(time)
+    round_trip_sec = sum(times)
+    round_trip_hours = round_trip_sec/360
+    round_trip_days = round_trip_hours/24
+    print "If you are driving, it will take you approximately %s hours, or %s days, to complete your journey." % (round_trip_hours, round_trip_days)
+else:
+    print "Okay, fine. Have it your way."
                      
 #in order to make compatible with new python servers that don't sort zipped objects. zip them. sort the int pts one only. Then use the find function to line them all up
