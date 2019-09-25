@@ -6,6 +6,7 @@ citynames = []
 x_coordinates = []
 y_coordinates = []
 
+# Get number of cities
 number_of_cities = raw_input('How many cities would you like to visit? Please press enter after each response. ')
 if number_of_cities.isdigit() == True:
     Number_of_Cities = int(number_of_cities)
@@ -17,6 +18,7 @@ if NOC_test <= 1:
     print "You must enter more than 1 city. Please rerun the program and try again."
     quit()
 
+# Get the cities
 for i in range(Number_of_Cities):
     citynames.append(raw_input('Enter a city: ').lower())
 CityNames = []
@@ -26,6 +28,7 @@ for i in citynames:
 print
 print "These are the cities you entered:", CityNames
 
+# API call to get longitude and latitude
 for i in citynames:
     r = requests.get('''https://maps.googleapis.com/maps/api/geocode/json?address={}&key=AIzaSyBXreCjf8x8_L7-7CW7ymdsV7jLaxuXeRg'''.format(i))
     data = r.json()
@@ -36,12 +39,14 @@ for i in citynames:
         print "You have entered a nonexistent city. Please look back at the cities you entered to check for any typos and try again."
         quit()
 
+# Choose aribtrary starting city
 starting_pt = (x_coordinates[0],y_coordinates[0])
 x_coordinates.remove(x_coordinates[0])
 y_coordinates.remove(y_coordinates[0])
 
 lst = []
 n = 0
+# Convert circle center and radius
 for i in range(Number_of_Cities-1):
     lst += [(x_coordinates[n], y_coordinates[n])]
     n += 1
@@ -60,6 +65,7 @@ sol=[]
 line_equations = []
 x_int_pts = []
 
+# Calculate order of x locations
 for i in lst:
     zero_div_test = i[0] - mean_long
     if zero_div_test == 0:
@@ -89,6 +95,7 @@ int_pts = []
 y_int_pts = []
 k=0
 
+# Find order of y locations and condense to int_pts
 for i in x_int_pts:
     circle_solver = radius_length**2 - ((i-mean_long)**2)
     y_int_pt1 = math.sqrt(circle_solver) + mean_lat
